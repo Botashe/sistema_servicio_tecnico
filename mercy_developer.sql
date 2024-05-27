@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-05-2024 a las 12:19:37
+-- Tiempo de generación: 27-05-2024 a las 11:20:06
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -44,7 +44,58 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`ID`, `Nombre`, `Apellido`, `Correo`, `Telefono`, `Direccion`, `Estado`) VALUES
-(1, 'Alfonso', 'Francisco', 'aaaaaaa@aaaa.aaa', '964320834', 'Iquique 777', 'Inactivo');
+(1, 'Alfonso', 'Francisque', 'aaaaaaa@aaaa.aaa', '964320834', 'Iquique 777', 'Inactivo'),
+(2, 'Veneco', 'Pulento', 'aaaaaaa@aaaa.aaa', '930115623', 'Antofalombia 313', 'Activo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `descripcionservicio`
+--
+
+CREATE TABLE `descripcionservicio` (
+  `ID` int(11) NOT NULL,
+  `Nombre` varchar(45) DEFAULT NULL,
+  `ServicioID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `descripcionservicio`
+--
+
+INSERT INTO `descripcionservicio` (`ID`, `Nombre`, `ServicioID`) VALUES
+(1, 'Se instala windows', 2),
+(2, 'Se arma el PC', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recepcionequipo`
+--
+
+CREATE TABLE `recepcionequipo` (
+  `ID` int(11) NOT NULL,
+  `Fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `TipoPC` int(11) DEFAULT NULL,
+  `Accesorio` varchar(400) DEFAULT NULL,
+  `MarcaPC` varchar(60) DEFAULT NULL,
+  `ModeloPC` varchar(60) DEFAULT NULL,
+  `NSeriePC` varchar(100) DEFAULT NULL,
+  `CapacidadRam` int(11) DEFAULT NULL,
+  `TipoAlmacenamiento` int(11) DEFAULT NULL,
+  `CapacidadAlmacenamiento` varchar(60) DEFAULT NULL,
+  `TipoGpu` int(11) DEFAULT NULL,
+  `Grafico` varchar(60) DEFAULT NULL,
+  `ClienteID` int(11) NOT NULL,
+  `ServicioID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `recepcionequipo`
+--
+
+INSERT INTO `recepcionequipo` (`ID`, `Fecha`, `TipoPC`, `Accesorio`, `MarcaPC`, `ModeloPC`, `NSeriePC`, `CapacidadRam`, `TipoAlmacenamiento`, `CapacidadAlmacenamiento`, `TipoGpu`, `Grafico`, `ClienteID`, `ServicioID`) VALUES
+(1, '2024-05-27 04:54:23', 1, 'si', 'si', 'si', 'si', 1, 2, 'mucho ', 1, 'creo que si', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -57,6 +108,7 @@ CREATE TABLE `servicio` (
   `Nombre` varchar(100) NOT NULL,
   `Precio` int(11) DEFAULT NULL,
   `Sku` varchar(45) DEFAULT NULL,
+  `Estado` int(11) NOT NULL,
   `UsuariosID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -64,8 +116,9 @@ CREATE TABLE `servicio` (
 -- Volcado de datos para la tabla `servicio`
 --
 
-INSERT INTO `servicio` (`ID`, `Nombre`, `Precio`, `Sku`, `UsuariosID`) VALUES
-(1, 'Instalacion de Windows', 15000, 'INDEX', 1);
+INSERT INTO `servicio` (`ID`, `Nombre`, `Precio`, `Sku`, `Estado`, `UsuariosID`) VALUES
+(2, 'Armado de PC', 20000, 'ABC123456789', 0, 2),
+(3, 'Instalacion de Windows', 15000, 'XYZ987654321', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -77,7 +130,7 @@ CREATE TABLE `usuario` (
   `ID` int(11) NOT NULL,
   `Nombre` varchar(45) NOT NULL,
   `Apellido` varchar(45) NOT NULL,
-  `Correo` varchar(60) DEFAULT NULL,
+  `Correo` varchar(60) NOT NULL,
   `Password` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -86,7 +139,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`ID`, `Nombre`, `Apellido`, `Correo`, `Password`) VALUES
-(1, 'Victor', 'Guzman', 'aaaaaaa@aaaa.aaa', 'aejkaefnjsek');
+(1, 'Victor', 'Guzman', 'aaaaaaa@aaaa.aaa', 'aejkaefnjsekf'),
+(2, 'Cristian', 'Castro', 'bbbbbbbbbb@bbb.bb', 'EWGHWUEI');
 
 --
 -- Índices para tablas volcadas
@@ -97,6 +151,21 @@ INSERT INTO `usuario` (`ID`, `Nombre`, `Apellido`, `Correo`, `Password`) VALUES
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`ID`);
+
+--
+-- Indices de la tabla `descripcionservicio`
+--
+ALTER TABLE `descripcionservicio`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `fk_DescripcionServicio_Servicio1_idx` (`ServicioID`);
+
+--
+-- Indices de la tabla `recepcionequipo`
+--
+ALTER TABLE `recepcionequipo`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `fk_RecepcionEquipo_Cliente1_idx` (`ClienteID`),
+  ADD KEY `fk_RecepcionEquipo_Servicio1_idx` (`ServicioID`);
 
 --
 -- Indices de la tabla `servicio`
@@ -119,23 +188,48 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `descripcionservicio`
+--
+ALTER TABLE `descripcionservicio`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `recepcionequipo`
+--
+ALTER TABLE `recepcionequipo`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `servicio`
 --
 ALTER TABLE `servicio`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `descripcionservicio`
+--
+ALTER TABLE `descripcionservicio`
+  ADD CONSTRAINT `fk_DescripcionServicio_Servicio1` FOREIGN KEY (`ServicioID`) REFERENCES `servicio` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `recepcionequipo`
+--
+ALTER TABLE `recepcionequipo`
+  ADD CONSTRAINT `fk_RecepcionEquipo_Cliente1` FOREIGN KEY (`ClienteID`) REFERENCES `cliente` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_RecepcionEquipo_Servicio1` FOREIGN KEY (`ServicioID`) REFERENCES `servicio` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `servicio`
@@ -223,6 +317,13 @@ CREATE TABLE `pma__export_templates` (
   `template_data` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Saved export templates';
 
+--
+-- Volcado de datos para la tabla `pma__export_templates`
+--
+
+INSERT INTO `pma__export_templates` (`id`, `username`, `export_type`, `template_name`, `template_data`) VALUES
+(1, 'root', 'server', 'mercy_developer', '{\"quick_or_custom\":\"quick\",\"what\":\"sql\",\"db_select[]\":[\"mercy_developer\",\"phpmyadmin\",\"test\",\"tienda_pulenta\"],\"aliases_new\":\"\",\"output_format\":\"sendit\",\"filename_template\":\"@SERVER@\",\"remember_template\":\"on\",\"charset\":\"utf-8\",\"compression\":\"none\",\"maxsize\":\"\",\"codegen_structure_or_data\":\"data\",\"codegen_format\":\"0\",\"csv_separator\":\",\",\"csv_enclosed\":\"\\\"\",\"csv_escaped\":\"\\\"\",\"csv_terminated\":\"AUTO\",\"csv_null\":\"NULL\",\"csv_columns\":\"something\",\"csv_structure_or_data\":\"data\",\"excel_null\":\"NULL\",\"excel_columns\":\"something\",\"excel_edition\":\"win\",\"excel_structure_or_data\":\"data\",\"json_structure_or_data\":\"data\",\"json_unicode\":\"something\",\"latex_caption\":\"something\",\"latex_structure_or_data\":\"structure_and_data\",\"latex_structure_caption\":\"Estructura de la tabla @TABLE@\",\"latex_structure_continued_caption\":\"Estructura de la tabla @TABLE@ (continúa)\",\"latex_structure_label\":\"tab:@TABLE@-structure\",\"latex_relation\":\"something\",\"latex_comments\":\"something\",\"latex_mime\":\"something\",\"latex_columns\":\"something\",\"latex_data_caption\":\"Contenido de la tabla @TABLE@\",\"latex_data_continued_caption\":\"Contenido de la tabla @TABLE@ (continúa)\",\"latex_data_label\":\"tab:@TABLE@-data\",\"latex_null\":\"\\\\textit{NULL}\",\"mediawiki_structure_or_data\":\"data\",\"mediawiki_caption\":\"something\",\"mediawiki_headers\":\"something\",\"htmlword_structure_or_data\":\"structure_and_data\",\"htmlword_null\":\"NULL\",\"ods_null\":\"NULL\",\"ods_structure_or_data\":\"data\",\"odt_structure_or_data\":\"structure_and_data\",\"odt_relation\":\"something\",\"odt_comments\":\"something\",\"odt_mime\":\"something\",\"odt_columns\":\"something\",\"odt_null\":\"NULL\",\"pdf_report_title\":\"\",\"pdf_structure_or_data\":\"data\",\"phparray_structure_or_data\":\"data\",\"sql_include_comments\":\"something\",\"sql_header_comment\":\"\",\"sql_use_transaction\":\"something\",\"sql_compatibility\":\"NONE\",\"sql_structure_or_data\":\"structure_and_data\",\"sql_create_table\":\"something\",\"sql_auto_increment\":\"something\",\"sql_create_view\":\"something\",\"sql_create_trigger\":\"something\",\"sql_backquotes\":\"something\",\"sql_type\":\"INSERT\",\"sql_insert_syntax\":\"both\",\"sql_max_query_size\":\"50000\",\"sql_hex_for_binary\":\"something\",\"sql_utc_time\":\"something\",\"texytext_structure_or_data\":\"structure_and_data\",\"texytext_null\":\"NULL\",\"yaml_structure_or_data\":\"data\",\"\":null,\"as_separate_files\":null,\"csv_removeCRLF\":null,\"excel_removeCRLF\":null,\"json_pretty_print\":null,\"htmlword_columns\":null,\"ods_columns\":null,\"sql_dates\":null,\"sql_relation\":null,\"sql_mime\":null,\"sql_disable_fk\":null,\"sql_views_as_tables\":null,\"sql_metadata\":null,\"sql_drop_database\":null,\"sql_drop_table\":null,\"sql_if_not_exists\":null,\"sql_simple_view_export\":null,\"sql_view_current_user\":null,\"sql_or_replace_view\":null,\"sql_procedure_function\":null,\"sql_truncate\":null,\"sql_delayed\":null,\"sql_ignore\":null,\"texytext_columns\":null}');
+
 -- --------------------------------------------------------
 
 --
@@ -291,7 +392,7 @@ CREATE TABLE `pma__recent` (
 --
 
 INSERT INTO `pma__recent` (`username`, `tables`) VALUES
-('root', '[{\"db\":\"mercy_developer\",\"table\":\"usuario\"},{\"db\":\"mercy_developer\",\"table\":\"servicio\"},{\"db\":\"mercy_developer\",\"table\":\"cliente\"},{\"db\":\"mercy-developers\",\"table\":\"cliente\"},{\"db\":\"mercy-developers\",\"table\":\"servicios\"},{\"db\":\"mercy-developers\",\"table\":\"usuarios_servicios\"},{\"db\":\"mercy-developers\",\"table\":\"usuarios\"},{\"db\":\"tienda_pulenta\",\"table\":\"usuarios\"},{\"db\":\"tienda_pulenta\",\"table\":\"productos\"}]');
+('root', '[{\"db\":\"mercy_developer\",\"table\":\"servicio\"},{\"db\":\"mercy_developer\",\"table\":\"usuario\"},{\"db\":\"mercy_developer\",\"table\":\"cliente\"},{\"db\":\"mercy-developers\",\"table\":\"cliente\"},{\"db\":\"mercy-developers\",\"table\":\"servicios\"},{\"db\":\"mercy-developers\",\"table\":\"usuarios_servicios\"},{\"db\":\"mercy-developers\",\"table\":\"usuarios\"},{\"db\":\"tienda_pulenta\",\"table\":\"usuarios\"},{\"db\":\"tienda_pulenta\",\"table\":\"productos\"}]');
 
 -- --------------------------------------------------------
 
@@ -398,7 +499,7 @@ CREATE TABLE `pma__userconfig` (
 --
 
 INSERT INTO `pma__userconfig` (`username`, `timevalue`, `config_data`) VALUES
-('root', '2024-05-24 10:18:52', '{\"Console\\/Mode\":\"collapse\",\"lang\":\"es\"}');
+('root', '2024-05-27 09:19:42', '{\"Console\\/Mode\":\"collapse\",\"lang\":\"es\"}');
 
 -- --------------------------------------------------------
 
@@ -567,7 +668,7 @@ ALTER TABLE `pma__column_info`
 -- AUTO_INCREMENT de la tabla `pma__export_templates`
 --
 ALTER TABLE `pma__export_templates`
-  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `pma__history`

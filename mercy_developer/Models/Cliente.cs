@@ -18,4 +18,6 @@ public partial class Cliente
     public string? Direccion { get; set; }
 
     public string? Estado { get; set; }
+
+    public virtual ICollection<Recepcionequipo> Recepcionequipos { get; set; } = new List<Recepcionequipo>();
 }

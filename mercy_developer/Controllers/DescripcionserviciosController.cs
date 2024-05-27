@@ -9,23 +9,23 @@ using mercy_developer.Models;
 
 namespace mercy_developer.Controllers
 {
-    public class ServiciosController : Controller
+    public class DescripcionserviciosController : Controller
     {
         private readonly MercyDeveloperContext _context;
 
-        public ServiciosController(MercyDeveloperContext context)
+        public DescripcionserviciosController(MercyDeveloperContext context)
         {
             _context = context;
         }
 
-        // GET: Servicios
+        // GET: Descripcionservicios
         public async Task<IActionResult> Index()
         {
-            var mercyDeveloperContext = _context.Servicios.Include(s => s.Usuarios);
+            var mercyDeveloperContext = _context.Descripcionservicios.Include(d => d.Servicio);
             return View(await mercyDeveloperContext.ToListAsync());
         }
 
-        // GET: Servicios/Details/5
+        // GET: Descripcionservicios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +33,42 @@ namespace mercy_developer.Controllers
                 return NotFound();
             }
 
-            var servicio = await _context.Servicios
-                .Include(s => s.Usuarios)
+            var descripcionservicio = await _context.Descripcionservicios
+                .Include(d => d.Servicio)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (servicio == null)
+            if (descripcionservicio == null)
             {
                 return NotFound();
             }
 
-            return View(servicio);
+            return View(descripcionservicio);
         }
 
-        // GET: Servicios/Create
+        // GET: Descripcionservicios/Create
         public IActionResult Create()
         {
-            ViewData["UsuariosId"] = new SelectList(_context.Usuarios, "Id", "Id");
+            ViewData["ServicioId"] = new SelectList(_context.Servicios, "Id", "Id");
             return View();
         }
 
-        // POST: Servicios/Create
+        // POST: Descripcionservicios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Precio,Sku,UsuariosId")] Servicio servicio)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,ServicioId")] Descripcionservicio descripcionservicio)
         {
-            if (servicio.Nombre !=null && servicio.Precio !=0)
+            if (descripcionservicio.Nombre !=null)
             {
-                _context.Servicios.Add(servicio);
+                _context.Descripcionservicios.Add(descripcionservicio);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuariosId"] = new SelectList(_context.Usuarios, "Id", "Id", servicio.UsuariosId);
-            return View(servicio);
+            ViewData["ServicioId"] = new SelectList(_context.Servicios, "Id", "Id", descripcionservicio.ServicioId);
+            return View(descripcionservicio);
         }
 
-        // GET: Servicios/Edit/5
+        // GET: Descripcionservicios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,37 +76,37 @@ namespace mercy_developer.Controllers
                 return NotFound();
             }
 
-            var servicio = await _context.Servicios.FindAsync(id);
-            if (servicio == null)
+            var descripcionservicio = await _context.Descripcionservicios.FindAsync(id);
+            if (descripcionservicio == null)
             {
                 return NotFound();
             }
-            ViewData["UsuariosId"] = new SelectList(_context.Usuarios, "Id", "Id", servicio.UsuariosId);
-            return View(servicio);
+            ViewData["ServicioId"] = new SelectList(_context.Servicios, "Id", "Id", descripcionservicio.ServicioId);
+            return View(descripcionservicio);
         }
 
-        // POST: Servicios/Edit/5
+        // POST: Descripcionservicios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Precio,Sku,UsuariosId")] Servicio servicio)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,ServicioId")] Descripcionservicio descripcionservicio)
         {
-            if (id != servicio.Id)
+            if (id != descripcionservicio.Id)
             {
                 return NotFound();
             }
 
-            if (servicio.Nombre != null && servicio.Precio != 0)
+            if (descripcionservicio.Nombre != null)
             {
                 try
                 {
-                    _context.Servicios.Update(servicio);
+                    _context.Descripcionservicios.Update(descripcionservicio);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ServicioExists(servicio.Id))
+                    if (!DescripcionservicioExists(descripcionservicio.Id))
                     {
                         return NotFound();
                     }
@@ -117,11 +117,11 @@ namespace mercy_developer.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuariosId"] = new SelectList(_context.Usuarios, "Id", "Id", servicio.UsuariosId);
-            return View(servicio);
+            ViewData["ServicioId"] = new SelectList(_context.Servicios, "Id", "Id", descripcionservicio.ServicioId);
+            return View(descripcionservicio);
         }
 
-        // GET: Servicios/Delete/5
+        // GET: Descripcionservicios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,35 +129,35 @@ namespace mercy_developer.Controllers
                 return NotFound();
             }
 
-            var servicio = await _context.Servicios
-                .Include(s => s.Usuarios)
+            var descripcionservicio = await _context.Descripcionservicios
+                .Include(d => d.Servicio)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (servicio == null)
+            if (descripcionservicio == null)
             {
                 return NotFound();
             }
 
-            return View(servicio);
+            return View(descripcionservicio);
         }
 
-        // POST: Servicios/Delete/5
+        // POST: Descripcionservicios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var servicio = await _context.Servicios.FindAsync(id);
-            if (servicio != null)
+            var descripcionservicio = await _context.Descripcionservicios.FindAsync(id);
+            if (descripcionservicio != null)
             {
-                _context.Servicios.Remove(servicio);
+                _context.Descripcionservicios.Remove(descripcionservicio);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ServicioExists(int id)
+        private bool DescripcionservicioExists(int id)
         {
-            return _context.Servicios.Any(e => e.Id == id);
+            return _context.Descripcionservicios.Any(e => e.Id == id);
         }
     }
 }

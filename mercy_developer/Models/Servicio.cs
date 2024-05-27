@@ -13,7 +13,13 @@ public partial class Servicio
 
     public string? Sku { get; set; }
 
+    public int Estado { get; set; }
+
     public int UsuariosId { get; set; }
+
+    public virtual ICollection<Descripcionservicio> Descripcionservicios { get; set; } = new List<Descripcionservicio>();
+
+    public virtual ICollection<Recepcionequipo> Recepcionequipos { get; set; } = new List<Recepcionequipo>();
 
     public virtual Usuario Usuarios { get; set; } = null!;
 }
